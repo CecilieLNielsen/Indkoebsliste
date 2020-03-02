@@ -12,7 +12,7 @@
 </head>
 <body>
 
-Du er nu logget ind, og har adgang til din huskeliste
+Du er nu logget ind, og har adgang til din huskeliste.
 
 </body>
 </html>
