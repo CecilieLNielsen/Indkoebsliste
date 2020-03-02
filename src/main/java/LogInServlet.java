@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @WebServlet(name = "LogInServlet", urlPatterns = {"/LogInServlet"})
 public class LogInServlet extends HttpServlet {
@@ -28,6 +30,16 @@ public class LogInServlet extends HttpServlet {
             brugerMap.put("admin", "1234");
 
             servletContext.setAttribute("brugerMap", brugerMap);
+
+        }
+        if ( ( (Set<String>)servletContext.getAttribute("aktiveBrugere") ) == null) {
+            Set<String> aktiveBrugere = new HashSet<>();
+            servletContext.setAttribute("aktiveBrugere", aktiveBrugere);
+        }
+
+        if (! (session.getAttribute("besked") == null)) {
+            request.getRequestDispatcher("WEB-INF/HuskeListe.jsp").forward(request, response);
+
         }
 
         if (!( (Map<String, String>)     servletContext.getAttribute("brugerMap") ).containsKey(navn)   ){
@@ -42,15 +54,21 @@ public class LogInServlet extends HttpServlet {
 
 
             if (navn.equalsIgnoreCase("admin")) {
-             request.getRequestDispatcher("WEB-INF/Admin.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/Admin.jsp").forward(request, response);
             }
 
-            session.setAttribute("besked", "du er logget ind med navnet " + navn);
-            request.getRequestDispatcher("WEB-INF/HuskeListe.jsp").forward(request,response);
+            if( !( (Set<String>)servletContext.getAttribute("aktiveBrugere") ).contains(navn)) {
+
+                ((Set<String>) servletContext.getAttribute("aktiveBrugere")).add(navn);
+                session.setAttribute("besked", "du er logget ind med navnet " + navn);
+                session.setAttribute("navn", navn);
+                request.getRequestDispatcher("WEB-INF/HuskeListe.jsp").forward(request,response);
+            }
+
         }
 
     // todo gå til logind dvs. index siden
-        request.setAttribute("besked", "Din kode var forkert, prøv igen!");
+        request.setAttribute("besked", "Der gik et eller andet galt, prøv igen!");
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
