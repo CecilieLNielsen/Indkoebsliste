@@ -12,7 +12,7 @@
 </head>
 <body>
 
-Her kan du registrere dig som bruger på huskelisten.
+Her skal du registrere dig inden, du kan lave indkøb på min webshop.
 <br>
 <br>
 ${requestScope.besked}
